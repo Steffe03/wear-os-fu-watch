@@ -2,6 +2,7 @@ package com.henzisoft.puttmaster9000.presentation.game
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -32,8 +33,9 @@ fun Scorecard(
     scorecard: GameFragment.Scorecard,
     selectedRound: Int,
     onSetScore: (score: Int) -> Unit,
-    par: Int
+    pars: List<Int>,
 ) {
+    val par = pars.getOrNull(selectedRound) ?: 3
     val state = rememberLazyListState()
     var pendingSelection by remember {
         mutableIntStateOf(0)
@@ -62,11 +64,26 @@ fun Scorecard(
 
     Column {
         val playerName = scorecard.user?.name ?: "N/A"
-        Text(
-            text = playerName,
-            fontSize = 18.sp,
-            modifier = Modifier.padding(start = 8.dp, bottom = 4.dp)
-        )
+        val playerScore = scorecard.scores
+            ?.mapIndexed { index, score -> score?.let { it - (pars.getOrNull(index) ?: 3) } }
+            ?.filterNotNull()
+            ?.sum() ?: 0
+        Row {
+            Text(
+                text = playerName,
+                fontSize = 18.sp,
+                modifier = Modifier.padding(start = 8.dp, bottom = 4.dp)
+            )
+            Text(
+                text = when {
+                    playerScore > 0 -> "+$playerScore"
+                    playerScore < 0 -> playerScore.toString() // already has "-" sign
+                    else -> "E" // "Even" — standard golf notation for par
+                },
+                fontSize = 18.sp,
+                modifier = Modifier.padding(start = 8.dp, bottom = 4.dp)
+            )
+        }
         LazyRow(
             modifier = Modifier
                 .fillMaxSize(),
@@ -109,6 +126,6 @@ fun ScorecardPreview() {
         ),
         selectedRound = 1,
         onSetScore = { },
-        par = 3
+        pars = listOf(3, 3, 3, 4, 2, 5)
     )
 }
