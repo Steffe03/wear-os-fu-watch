@@ -33,9 +33,8 @@ fun Scorecard(
     scorecard: GameFragment.Scorecard,
     selectedRound: Int,
     onSetScore: (score: Int) -> Unit,
-    pars: List<Int>,
+    par: Int,
 ) {
-    val par = pars.getOrNull(selectedRound) ?: 3
     val state = rememberLazyListState()
     var pendingSelection by remember {
         mutableIntStateOf(0)
@@ -124,6 +123,6 @@ fun ScorecardPreview() {
         ),
         selectedRound = 1,
         onSetScore = { },
-        pars = listOf(3, 3, 3, 4, 2, 5)
+        par = 3
     )
 }

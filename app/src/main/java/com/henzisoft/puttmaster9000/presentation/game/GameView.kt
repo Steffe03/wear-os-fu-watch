@@ -95,7 +95,7 @@ fun GameView() {
                 Scorecard(
                     scorecard,
                     viewModel.selectedRound.intValue,
-                    pars = game.pars ?: emptyList(),
+                    par = game.pars?.get(viewModel.selectedRound.intValue) ?: 3,
                     onSetScore = { score ->
                         viewModel.setScore(
                             game.id,
