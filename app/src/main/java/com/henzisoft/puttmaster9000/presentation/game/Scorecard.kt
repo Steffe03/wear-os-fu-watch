@@ -64,10 +64,7 @@ fun Scorecard(
 
     Column {
         val playerName = scorecard.user?.name ?: "N/A"
-        val playerScore = scorecard.scores
-            ?.mapIndexed { index, score -> score?.let { it - (pars.getOrNull(index) ?: 3) } }
-            ?.filterNotNull()
-            ?.sum() ?: 0
+        val playerScore = scorecard.plusminus ?: 0
         Row {
             Text(
                 text = playerName,
@@ -122,7 +119,8 @@ fun ScorecardPreview() {
     Scorecard(
         scorecard = GameFragment.Scorecard(
             user = GameFragment.User(name = "Testi", id="123"),
-            scores = listOf(2, 2, 3, 3, 4, 4)
+            scores = listOf(5, 2, 4, 5, 3, 6),
+            plusminus = 5
         ),
         selectedRound = 1,
         onSetScore = { },
